@@ -4,34 +4,37 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Header } from "@/components/site/Header";
+import { Footer } from "@/components/site/Footer";
+import { ease } from "@/lib/motion";
 
-function NotFoundComponent() {
+export function NotFoundView({ title = "This page isn't here." }: { title?: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+    <section className="container-studio flex min-h-[80svh] flex-col justify-end pb-16 pt-32">
+      <p className="text-label text-muted-foreground">404 — Not found</p>
+      <h1 className="mt-6 text-display">{title}</h1>
+      <p className="mt-6 max-w-md text-lede text-muted-foreground">
+        The link may be old, or the project may have moved.
+      </p>
+      <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+        <Link to="/work" className="inline-flex min-h-12 items-center bg-primary px-6 text-sm font-medium text-primary-foreground">
+          Browse the work
+        </Link>
+        <Link to="/" className="inline-flex min-h-12 items-center border border-border px-6 text-sm">
+          Go home
+        </Link>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -43,31 +46,22 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
-        </div>
+    <div className="container-studio flex min-h-screen flex-col justify-center">
+      <h1 className="text-headline">This page didn't load.</h1>
+      <p className="mt-4 text-muted-foreground">Something went wrong. Try again or head home.</p>
+      <div className="mt-8 flex gap-3">
+        <button
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="inline-flex min-h-12 items-center bg-primary px-6 text-sm font-medium text-primary-foreground"
+        >
+          Try again
+        </button>
+        <a href="/" className="inline-flex min-h-12 items-center border border-border px-6 text-sm">
+          Go home
+        </a>
       </div>
     </div>
   );
@@ -77,27 +71,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#0D0D0D" },
+      { title: "Zenkai Labs — Ideas Into Visual Impact" },
+      { name: "description", content: "Independent AI creative studio making product visuals, films and campaigns." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" },
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  notFoundComponent: NotFoundComponent,
+  notFoundComponent: () => (
+    <Shell>
+      <NotFoundView />
+    </Shell>
+  ),
   errorComponent: ErrorComponent,
 });
 
@@ -115,13 +110,36 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function Shell({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">
+        Skip to content
+      </a>
+      <Header />
+      <main id="main">{children}</main>
+      <Footer />
+    </>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const reduce = useReducedMotion();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <Shell>
+        <motion.div
+          key={pathname}
+          initial={reduce ? false : { opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease }}
+        >
+          <Outlet />
+        </motion.div>
+      </Shell>
     </QueryClientProvider>
   );
 }
