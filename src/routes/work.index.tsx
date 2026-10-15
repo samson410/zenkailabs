@@ -13,6 +13,8 @@ export const Route = createFileRoute("/work/")({
       { name: "description", content: "Product films, commercials, UGC and social creatives by Zenkai Labs." },
       { property: "og:title", content: "Work — Zenkai Labs" },
       { property: "og:description", content: "Product films, commercials, UGC and social creatives by Zenkai Labs." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: WorkPage,

@@ -21,6 +21,8 @@ export const Route = createFileRoute("/contact")({
       { name: "description", content: "Start a project with Zenkai Labs. Tell us what you're building." },
       { property: "og:title", content: "Contact — Zenkai Labs" },
       { property: "og:description", content: "Start a project with Zenkai Labs." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ContactPage,

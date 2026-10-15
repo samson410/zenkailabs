@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Pause, Play } from "lucide-react";
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { site } from "@/config/site";
 import { categories, featuredProjects } from "@/data/projects";
-import { fadeUp, maskReveal, stagger } from "@/lib/motion";
+import { fadeUp, stagger } from "@/lib/motion";
 import { LineHeading, Reveal } from "@/components/site/Reveal";
 import { ProjectCard } from "@/components/site/ProjectCard";
 import { ProjectImage } from "@/components/site/ProjectImage";
@@ -16,6 +18,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: site.hero.supporting },
       { property: "og:title", content: "Zenkai Labs — Made to make you look twice." },
       { property: "og:description", content: site.hero.supporting },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Home,
@@ -23,6 +27,8 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const reduce = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
   const [lead, ...rest] = featuredProjects;
   const mid = rest.slice(0, 2);
   const row = rest.slice(2);
@@ -31,46 +37,67 @@ function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="container-studio grid gap-10 pt-28 md:grid-cols-12 md:gap-6 md:pt-36">
-        <div className="md:col-span-7 md:flex md:flex-col md:justify-end">
+      <section className="home-hero relative isolate flex h-screen flex-col justify-end overflow-hidden bg-background">
+        <div className="absolute inset-0 -z-20">
+          <ProjectImage src={hero.image} alt={hero.imageAlt} label={site.brandName} eager />
+          {hero.previewVideo && (
+            <video
+              ref={videoRef}
+              src={hero.previewVideo}
+              poster={hero.image}
+              muted
+              loop
+              autoPlay={!reduce}
+              playsInline
+              preload="metadata"
+              onPlay={() => setPlaying(true)}
+              onPause={() => setPlaying(false)}
+              aria-label="Zenkai Labs studio film"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
+        </div>
+        <div className="hero-shade absolute inset-0 -z-10" />
+        <div className="container-studio pb-12 pt-24 md:pb-20">
           <motion.p className="text-label text-muted-foreground" initial={reduce ? false : "hidden"} animate="show" variants={fadeUp}>
             {hero.eyebrow}
           </motion.p>
-          <LineHeading lines={hero.headline} className="mt-6 text-display" delay={0.1} />
+          <LineHeading lines={[site.brandName]} className="hero-heading mt-6" delay={0.1} />
+          <p className="mt-5 text-title">{hero.headline.join(" ")}</p>
           <motion.div initial={reduce ? false : "hidden"} animate="show" variants={stagger(0.08, 0.55)}>
             <motion.p variants={fadeUp} className="mt-8 max-w-md text-lede text-muted-foreground">
               {hero.supporting}
             </motion.p>
             <motion.div variants={fadeUp} className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/work"
-                className="group inline-flex min-h-12 items-center justify-between gap-6 bg-primary px-6 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-              >
+              <Button asChild className="group h-12 justify-between gap-6 px-6">
+                <Link to="/work">
                 {hero.primaryCta}
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={1.5} />
-              </Link>
-              <Link to="/contact" className="inline-flex min-h-12 items-center border border-border px-6 text-sm transition-colors hover:bg-secondary">
-                {hero.secondaryCta}
-              </Link>
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="h-12 bg-background/20 px-6">
+                <Link to="/contact">{hero.secondaryCta}</Link>
+              </Button>
             </motion.div>
           </motion.div>
         </div>
-        <motion.div
-          className="relative aspect-[4/5] overflow-hidden bg-secondary md:col-span-5 md:aspect-[4/5.4]"
-          initial={reduce ? false : "hidden"}
-          animate="show"
-          variants={maskReveal}
-          transition={{ delay: 0.25 }}
-        >
-          {hero.previewVideo ? (
-            <video src={hero.previewVideo} poster={hero.image} muted loop autoPlay playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
-          ) : (
-            <ProjectImage src={hero.image} alt={hero.imageAlt} label={site.brandName} eager />
-          )}
-          <span className="text-label absolute bottom-3 left-3 bg-background/80 px-2 py-1.5 text-muted-foreground">
-            Studio still — 2025
-          </span>
-        </motion.div>
+        {hero.previewVideo && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute right-5 top-24 bg-background/40 md:right-10"
+            aria-label={playing ? "Pause background video" : "Play background video"}
+            title={playing ? "Pause background video" : "Play background video"}
+            onClick={() => {
+              const video = videoRef.current;
+              if (!video) return;
+              if (video.paused) void video.play().catch(() => setPlaying(false));
+              else video.pause();
+            }}
+          >
+            {playing ? <Pause /> : <Play />}
+          </Button>
+        )}
       </section>
 
       {/* Category ticker */}

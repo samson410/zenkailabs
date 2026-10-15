@@ -96,6 +96,33 @@
   }
 }
 
+.hero-shade {
+  background: linear-gradient(90deg, var(--background), transparent 100%),
+    linear-gradient(0deg, var(--background), transparent 85%);
+}
+
+.hero-heading {
+  font-size: 3.25rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .hero-heading { font-size: 6rem; }
+}
+
+@media (min-width: 1280px) {
+  .hero-heading { font-size: 8rem; }
+}
+
+@media (max-height: 650px) {
+  .home-hero .container-studio { padding-bottom: 1.5rem; }
+  .home-hero .text-lede { margin-top: 1rem; }
+  .home-hero .hero-heading { margin-top: 1rem; }
+  .home-hero .mt-10 { margin-top: 1.5rem; }
+}
+
 /* Type scale */
 @utility text-display {
   font-size: clamp(2.6rem, 11vw, 9.5rem);
