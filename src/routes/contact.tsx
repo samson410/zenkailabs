@@ -67,7 +67,7 @@ function ContactPage() {
       "",
       f.description,
     ]
-      .filter((l) => l !== false && l !== "")
+      .filter((l): l is string => typeof l === "string" && l !== "")
       .join("\n");
     window.location.href = `mailto:${site.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setOpened(true);
