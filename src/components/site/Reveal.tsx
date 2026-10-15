@@ -40,7 +40,7 @@ export function LineHeading({
     <MotionTag className={className} initial={reduce ? false : "hidden"} {...trigger} variants={stagger(0.09, delay)}>
       {lines.map((l, i) => (
         <span key={i} className="block overflow-hidden pb-[0.08em]">
-          <motion.span className="block" variants={reduce ? undefined : lineReveal}>
+          <motion.span className="block" variants={reduce ? {} : lineReveal}>
             {l}
           </motion.span>
         </span>

@@ -9,7 +9,7 @@ describe("projects data", () => {
     expect(projects.filter((p) => p.featured).length).toBeGreaterThanOrEqual(5);
   });
   it("first project has no previous, last has no next", () => {
-    expect(getAdjacentProjects(sortedProjects[0].slug).prev).toBeUndefined();
-    expect(getAdjacentProjects(sortedProjects[sortedProjects.length - 1].slug).next).toBeUndefined();
+    expect(getAdjacentProjects(sortedProjects[0]!.slug).prev).toBeUndefined();
+    expect(getAdjacentProjects(sortedProjects[sortedProjects.length - 1]!.slug).next).toBeUndefined();
   });
 });
