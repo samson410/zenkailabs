@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LineHeading, Reveal } from "@/components/site/Reveal";
 import { CtaBand } from "@/components/site/CtaBand";
 import { ProjectImage } from "@/components/site/ProjectImage";
+import { site } from "@/config/site";
 
 // Editable About content
 const about = {
@@ -35,6 +36,8 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: about.intro },
       { property: "og:title", content: "About — Zenkai Labs" },
       { property: "og:description", content: about.intro },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AboutPage,
@@ -52,6 +55,20 @@ function AboutPage() {
           </div>
           <Reveal className="md:col-span-6 md:col-start-7 md:self-end">
             <p className="text-title text-balance">{about.intro}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section aria-labelledby="brand-heading" className="mt-24 border-y border-border bg-secondary/30 py-16 md:mt-36 md:py-24">
+        <div className="container-studio grid gap-10 md:grid-cols-12 md:gap-6">
+          <p className="text-label text-muted-foreground md:col-span-3">The brand</p>
+          <Reveal className="md:col-span-9">
+            <h2 id="brand-heading" className="text-title">{site.brandName}</h2>
+            <p className="mt-6 text-3xl font-medium leading-tight md:text-5xl">{site.tagline}</p>
+            <div className="mt-10 grid gap-6 text-lede text-muted-foreground md:grid-cols-2 md:gap-10">
+              <p>Zenkai Labs brings creative thinking and visual craft together. Our focus is on giving brands a distinct point of view — turning an idea into imagery that feels considered, recognisable and worth remembering.</p>
+              <p>For us, AI is part of the process, not the identity. The identity comes from the choices: the story we tell, the light we shape and the details we keep. Across stills, films and campaigns, the intention stays the same — ideas into visual impact.</p>
+            </div>
           </Reveal>
         </div>
       </section>

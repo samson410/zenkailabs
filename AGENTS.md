@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Home background media reads from the central site hero configuration, with an image fallback and native video playback; this keeps media replacement independent of layout.
