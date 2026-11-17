@@ -90,10 +90,6 @@ function ProjectPage() {
       >
         <ProjectVideoPlayer key={p.slug} project={p} />
       </div>
-
-        <ProjectVideoPlayer key={p.slug} project={p} />
-      </div>
-
       {(sections.length > 0 || p.deliverables?.length) && (
         <div className="mt-20 md:mt-32">
           {sections.map(([label, text]) => (

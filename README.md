@@ -2,8 +2,6 @@
 
 Implement exactly the screenshot and nothing else
 
-This project was built with [Lovable](https://lovable.dev).
-
 **Live app**: https://zenkailabs.lovable.app
 
 ## Build with Lovable
