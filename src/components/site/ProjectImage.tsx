@@ -8,7 +8,7 @@ export function ProjectImage({
   className = "",
   eager = false,
 }: {
-  src?: string;
+  src?: string | undefined;
   alt: string;
   label: string;
   className?: string;

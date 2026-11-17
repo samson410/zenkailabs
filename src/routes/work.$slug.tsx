@@ -77,7 +77,20 @@ function ProjectPage() {
         </div>
       </header>
 
-      <div className={`mx-auto mt-14 md:mt-20 ${p.aspectRatio === "9:16" ? "max-w-md" : p.aspectRatio === "16:9" ? "" : "max-w-2xl"}`}>
+            <div
+        className={`mx-auto mt-14 md:mt-20 w-full ${
+          p.aspectRatio === "9:16"
+            ? "max-w-[min(28rem,calc(80svh*9/16))]"
+            : p.aspectRatio === "4:5"
+              ? "max-w-[min(42rem,calc(80svh*4/5))]"
+              : p.aspectRatio === "1:1"
+                ? "max-w-[min(42rem,80svh)]"
+                : "max-w-[calc(80svh*16/9)]"
+        }`}
+      >
+        <ProjectVideoPlayer key={p.slug} project={p} />
+      </div>
+
         <ProjectVideoPlayer key={p.slug} project={p} />
       </div>
 

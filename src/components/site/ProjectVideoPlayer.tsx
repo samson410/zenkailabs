@@ -1,5 +1,5 @@
 import type { Project } from "@/data/projects";
-import { aspectClass } from "@/data/projects";
+import { aspectClass, getVideo, getThumbnail } from "@/data/projects";
 import { ProjectImage } from "./ProjectImage";
 
 /**
@@ -11,7 +11,8 @@ import { ProjectImage } from "./ProjectImage";
  */
 export function ProjectVideoPlayer({ project }: { project: Project }) {
   const frame = `relative w-full overflow-hidden bg-secondary ${aspectClass[project.aspectRatio]}`;
-  const src = project.videoSource;
+  const src = getVideo(project);
+  const thumb = getThumbnail(project);
 
   if (src?.type === "cloudflare-stream" && src.playbackUrl) {
     const url = new URL(src.playbackUrl);
@@ -37,7 +38,7 @@ export function ProjectVideoPlayer({ project }: { project: Project }) {
       <div className={frame}>
         <video
           src={src.url}
-          poster={project.thumbnail || undefined}
+          poster={thumb || undefined}
           controls
           playsInline
           preload="metadata"
@@ -49,7 +50,7 @@ export function ProjectVideoPlayer({ project }: { project: Project }) {
 
   return (
     <div className={frame}>
-      <ProjectImage src={project.thumbnail} alt={project.altText} label={`${project.brand} — ${project.title}`} eager />
+      <ProjectImage src={thumb} alt={project.altText} label={`${project.brand} — ${project.title}`} eager />
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-background/85 px-4 py-3">
         <span className="text-label">Project video placeholder</span>
         <span className="text-label text-muted-foreground">{project.aspectRatio}</span>
